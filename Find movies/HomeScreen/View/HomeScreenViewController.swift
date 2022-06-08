@@ -13,6 +13,17 @@ class HomeScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .blue
+        view.backgroundColor = .customBlack
+        let logo = UIImage.logoTitle
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: 182, height: 95))
+        container.backgroundColor = UIColor.clear
+
+        let imageView = UIImageView(frame:  CGRect(x: -80, y: 2, width: 182, height: 95))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = logo
+
+        container.addSubview(imageView)
+
+        self.navigationItem.titleView = container
     }
 }

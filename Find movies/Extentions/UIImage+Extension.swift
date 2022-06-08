@@ -16,5 +16,5 @@ extension UIImage {
     static var playIcon = UIImage(named: "playIcon") ?? UIImage()
     static var searchIcon = UIImage(named: "searchIcon") ?? UIImage()
     static var userIcon = UIImage(named: "userIcon") ?? UIImage()
-
+    static var logoTitle = UIImage(named: "logoTitle") ?? UIImage()
 }

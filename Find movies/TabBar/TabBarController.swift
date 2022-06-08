@@ -60,7 +60,7 @@ class TabBarController: UITabBarController {
         tabBar.itemPositioning = .centered
     }
 
-    private func setupViewControllers() -> [UIViewController]{
+    private func setupViewControllers() -> [UIViewController] {
         let homeVC = UINavigationController(rootViewController: HomeScreenViewController())
         homeVC.navigationBar.prefersLargeTitles = true
         let bookmarkVC = UINavigationController(rootViewController: BookmarkScreenViewController())
