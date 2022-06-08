@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8443B5CB2850C55100A36452 /* CategoriesScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5CA2850C55100A36452 /* CategoriesScreenViewController.swift */; };
+		8443B5CF2850C63A00A36452 /* BookmarkScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5CE2850C63A00A36452 /* BookmarkScreenViewController.swift */; };
+		8443B5D42850C68700A36452 /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5D32850C68700A36452 /* HomeScreenViewController.swift */; };
+		8443B5D72850C6C100A36452 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5D62850C6C100A36452 /* UIColor+Extension.swift */; };
+		8443B5D92850C6DA00A36452 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5D82850C6DA00A36452 /* UIImage+Extension.swift */; };
 		8475653D28507D4B00822E74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475653C28507D4B00822E74 /* AppDelegate.swift */; };
 		8475653F28507D4B00822E74 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475653E28507D4B00822E74 /* SceneDelegate.swift */; };
 		8475654128507D4B00822E74 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475654028507D4B00822E74 /* TabBarController.swift */; };
@@ -15,6 +20,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8443B5CA2850C55100A36452 /* CategoriesScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesScreenViewController.swift; sourceTree = "<group>"; };
+		8443B5CE2850C63A00A36452 /* BookmarkScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkScreenViewController.swift; sourceTree = "<group>"; };
+		8443B5D32850C68700A36452 /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
+		8443B5D62850C6C100A36452 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		8443B5D82850C6DA00A36452 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		8475653928507D4B00822E74 /* Find movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Find movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8475653C28507D4B00822E74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8475653E28507D4B00822E74 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -35,6 +45,72 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8443B5C92850C53200A36452 /* CategoriesScreen */ = {
+			isa = PBXGroup;
+			children = (
+				8443B5D02850C65100A36452 /* View */,
+			);
+			path = CategoriesScreen;
+			sourceTree = "<group>";
+		};
+		8443B5CC2850C60F00A36452 /* BookmarkScreen */ = {
+			isa = PBXGroup;
+			children = (
+				8443B5CD2850C62700A36452 /* View */,
+			);
+			path = BookmarkScreen;
+			sourceTree = "<group>";
+		};
+		8443B5CD2850C62700A36452 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8443B5CE2850C63A00A36452 /* BookmarkScreenViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8443B5D02850C65100A36452 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8443B5CA2850C55100A36452 /* CategoriesScreenViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8443B5D12850C67400A36452 /* HomeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				8443B5D22850C67D00A36452 /* View */,
+			);
+			path = HomeScreen;
+			sourceTree = "<group>";
+		};
+		8443B5D22850C67D00A36452 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8443B5D32850C68700A36452 /* HomeScreenViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8443B5D52850C69E00A36452 /* Extentions */ = {
+			isa = PBXGroup;
+			children = (
+				8443B5D62850C6C100A36452 /* UIColor+Extension.swift */,
+				8443B5D82850C6DA00A36452 /* UIImage+Extension.swift */,
+			);
+			path = Extentions;
+			sourceTree = "<group>";
+		};
+		8443B5DA2850C6FC00A36452 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				8475653C28507D4B00822E74 /* AppDelegate.swift */,
+				8475653E28507D4B00822E74 /* SceneDelegate.swift */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
 		8475653028507D4B00822E74 = {
 			isa = PBXGroup;
 			children = (
@@ -54,8 +130,11 @@
 		8475653B28507D4B00822E74 /* Find movies */ = {
 			isa = PBXGroup;
 			children = (
-				8475653C28507D4B00822E74 /* AppDelegate.swift */,
-				8475653E28507D4B00822E74 /* SceneDelegate.swift */,
+				8443B5D52850C69E00A36452 /* Extentions */,
+				8443B5D12850C67400A36452 /* HomeScreen */,
+				8443B5CC2850C60F00A36452 /* BookmarkScreen */,
+				8443B5C92850C53200A36452 /* CategoriesScreen */,
+				8443B5DA2850C6FC00A36452 /* SupportingFiles */,
 				847565502850923900822E74 /* TabBar */,
 				8475654528507D4D00822E74 /* Assets.xcassets */,
 				8475654728507D4D00822E74 /* LaunchScreen.storyboard */,
@@ -142,9 +221,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8443B5D72850C6C100A36452 /* UIColor+Extension.swift in Sources */,
+				8443B5CB2850C55100A36452 /* CategoriesScreenViewController.swift in Sources */,
+				8443B5CF2850C63A00A36452 /* BookmarkScreenViewController.swift in Sources */,
+				8443B5D92850C6DA00A36452 /* UIImage+Extension.swift in Sources */,
 				8475654128507D4B00822E74 /* TabBarController.swift in Sources */,
 				8475653D28507D4B00822E74 /* AppDelegate.swift in Sources */,
 				8475653F28507D4B00822E74 /* SceneDelegate.swift in Sources */,
+				8443B5D42850C68700A36452 /* HomeScreenViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
