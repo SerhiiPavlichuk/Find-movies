@@ -10,13 +10,11 @@ import UIKit
 import SnapKit
 
 enum SectionType {
-    case movies
-    case tvShows
+    case movies(viewModels: [MoviesCellViewModel])
+    case tvShows(viewModels: [TVShowCellViewModel])
 }
 
 class HomeScreenViewController: UIViewController {
-
-    var movies: [Movie] = []
 
     private lazy var collectionView: UICollectionView = UICollectionView(
         frame: .zero,
@@ -32,6 +30,9 @@ class HomeScreenViewController: UIViewController {
         loadMovies(completion: {
             self.collectionView.reloadData()
         })
+        loadTVShows(completion: {
+            self.collectionView.reloadData()
+        })
     }
 
     override func viewDidLayoutSubviews() {
@@ -39,9 +40,13 @@ class HomeScreenViewController: UIViewController {
         setupConstraints()
     }
 
+    private var sections = [SectionType]()
+
     private func setupCollectionView() {
 
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.defaultCellIdentifier)
+        collectionView.register(MoviesCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.movieCellIdentifier)
+        collectionView.register(TVShowsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.tvShowCellIdentifier)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .clear
@@ -63,20 +68,53 @@ class HomeScreenViewController: UIViewController {
     }
 
     private func loadMovies(completion: @escaping(() -> ())) {
-        MovieNetworkManager.shared.requestTrendingMovies(completion: { movies in
-            self.movies = movies
+        NetworkManager.shared.requestTrendingMovies(completion: { movies in
+            self.configureMovieModels(movie: movies)
             completion()
         })
+
+    }
+    //configure MovieModel
+    private func configureMovieModels(movie: [Movie]) {
+        sections.append(.movies(viewModels: movie.compactMap({_ in
+            return MoviesCellViewModel(
+                posterImage: movie.first?.posterPath ?? "",
+                releaseDate: movie.first?.releaseDate ?? "",
+                title: movie.first?.title ?? "")
+        })))
+    }
+
+    private func loadTVShows(completion: @escaping(() -> ())) {
+        NetworkManager.shared.requestTrendingTVShows(completion: { tvShows in
+            self.configureTVShowModels(tvShows: tvShows)
+            completion()
+        })
+
+    }
+    //configure TVShowModel
+    private func configureTVShowModels(tvShows: [TvShow]) {
+        sections.append(.tvShows(viewModels: tvShows.compactMap({_ in
+            return TVShowCellViewModel(
+                posterImage: tvShows.first?.posterPath ?? "",
+                releaseDate: tvShows.first?.firstAirDate ?? "",
+                title: tvShows.first?.name ?? "")
+        })))
     }
 }
 
 extension HomeScreenViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        movies.count
+        let collectionType = sections[section]
+        switch collectionType {
+        case .movies(let viewModels):
+            return viewModels.count
+        case .tvShows(let viewModels):
+            return viewModels.count
+        }
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return sections.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

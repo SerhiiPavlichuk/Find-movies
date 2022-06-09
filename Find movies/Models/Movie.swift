@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Movie: Codable, Hashable {
+struct Movie: Codable {
 
     var adult: Bool?
     let id: Int?
