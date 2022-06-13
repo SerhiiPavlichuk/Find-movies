@@ -10,11 +10,14 @@ import UIKit
 import SnapKit
 
 enum SectionType {
-    case movies(viewModels: [MoviesCellViewModel])
+    case movies(viewModels: [Movie])
     case tvShows(viewModels: [TVShowCellViewModel])
 }
 
 class HomeScreenViewController: UIViewController {
+
+    private var movies: [Movie] = []
+//    var films: PopularMovieResult?
 
     private lazy var collectionView: UICollectionView = UICollectionView(
         frame: .zero,
@@ -44,7 +47,7 @@ class HomeScreenViewController: UIViewController {
 
     private func setupCollectionView() {
 
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.defaultCellIdentifier)
+//        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.defaultCellIdentifier)
         collectionView.register(MoviesCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.movieCellIdentifier)
         collectionView.register(TVShowsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.tvShowCellIdentifier)
         collectionView.dataSource = self
@@ -69,20 +72,23 @@ class HomeScreenViewController: UIViewController {
 
     private func loadMovies(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestTrendingMovies(completion: { movies in
-            self.configureMovieModels(movie: movies)
+//            self.movies = movies
+            self.sections.append(.movies(viewModels: movies))
+//            self.configureMovieModels(movie: movies)
             completion()
         })
 
     }
-    //configure MovieModel
-    private func configureMovieModels(movie: [Movie]) {
-        sections.append(.movies(viewModels: movie.compactMap({_ in
-            return MoviesCellViewModel(
-                posterImage: movie.first?.posterPath ?? "",
-                releaseDate: movie.first?.releaseDate ?? "",
-                title: movie.first?.title ?? "")
-        })))
-    }
+
+//    configure MovieModel
+//    private func configureMovieModels(movie: [Movie]) {
+//        sections.append(.movies(viewModels: movie.compactMap({ _ in
+//            return MoviesCellViewModel(
+//                posterImage: movie.first?.posterPath ?? "",
+//                releaseDate: movie.first?.releaseDate ?? "",
+//                title: movie.first?.title ?? "")
+//        })))
+//    }
 
     private func loadTVShows(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestTrendingTVShows(completion: { tvShows in
@@ -99,6 +105,16 @@ class HomeScreenViewController: UIViewController {
                 releaseDate: tvShows.first?.firstAirDate ?? "",
                 title: tvShows.first?.name ?? "")
         })))
+    }
+
+    func setupConstraints() {
+        view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { make in
+            make.left.equalTo(10)
+            make.right.equalTo(-10)
+            make.top.equalTo(140)
+            make.bottom.equalTo(-90)
+        }
     }
 }
 
@@ -118,22 +134,23 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.defaultCellIdentifier, for: indexPath)
-        if indexPath.section == 0 {
-            cell.backgroundColor = .systemRed
-        } else if indexPath.section == 1 {
-            cell.backgroundColor = .systemBlue
-        }
-        return cell
-    }
+        let collectionType = sections[indexPath.section]
+        switch collectionType {
+        case .movies(let viewModels):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.movieCellIdentifier, for: indexPath) as? MoviesCollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            let viewModels = viewModels[indexPath.row]
+            cell.configure(with: viewModels)
+            return cell
+        case .tvShows(let viewModels):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.tvShowCellIdentifier, for: indexPath) as? TVShowsCollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            let viewModels = viewModels[indexPath.row]
 
-    func setupConstraints() {
-        view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
-            make.left.equalTo(10)
-            make.right.equalTo(-10)
-            make.top.equalTo(140)
-            make.bottom.equalTo(-90)
+            cell.backgroundColor = .systemRed
+            return cell
         }
     }
 

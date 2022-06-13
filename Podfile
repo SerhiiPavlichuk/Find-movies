@@ -8,5 +8,6 @@ target 'Find movies' do
   # Pods for Find movies
 	pod 'SnapKit'
 	pod 'Alamofire'
+	pod 'SDWebImage'
 
 end
