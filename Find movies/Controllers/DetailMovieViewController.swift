@@ -25,20 +25,21 @@ class MediaViewController: UIViewController {
         let posterImage = UIImageView()
         posterImage.contentMode = .scaleAspectFill
         posterImage.clipsToBounds = true
+        posterImage.alpha = 0.8
         return posterImage
     }()
 
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.font = .systemFont(ofSize: 20, weight: .black)
+        titleLabel.font = .systemFont(ofSize: 30, weight: .black)
         titleLabel.textColor = .customWhite
+        titleLabel.numberOfLines = 0
         return titleLabel
     }()
 
     private lazy var releaseDate: UILabel = {
         let releaseDate = UILabel()
-        releaseDate.font = .systemFont(ofSize: 20, weight: .black)
-        releaseDate.textColor = .customWhite
+        releaseDate.textColor = .customGray
         return releaseDate
     }()
 
@@ -47,8 +48,28 @@ class MediaViewController: UIViewController {
         var settings = CosmosSettings()
         settings.fillMode = .half
         settings.totalStars = 5
+        settings.textColor = .customWhite
+        settings.starSize = 30
+        settings.textFont = .systemFont(ofSize: 25)
+        settings.textColor = .systemOrange
         ratingStar.settings = settings
         return ratingStar
+    }()
+
+    private lazy var overviewLabel: UILabel = {
+        let overviewLabel = UILabel()
+        overviewLabel.font = .systemFont(ofSize: 20, weight: .regular)
+        overviewLabel.textColor = .customGray
+        overviewLabel.numberOfLines = 3
+        return overviewLabel
+    }()
+
+    private lazy var castLabel: UILabel = {
+        let castLabel = UILabel()
+        castLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        castLabel.textColor = .customWhite
+        castLabel.text = "Cast"
+        return castLabel
     }()
 
 
@@ -114,8 +135,10 @@ class MediaViewController: UIViewController {
             let url = URL(string: movieImageUrl)
             posterImage.sd_setImage(with: url)
             titleLabel.text = movie.title
-            releaseDate.text = movie.releaseDate
+            releaseDate.text = "Release date \(movie.releaseDate ?? "No date")"
             ratingStar.rating = (movie.voteAverage ?? 0.0) / 2
+            ratingStar.text = "\(movie.voteAverage ?? 0.0)"
+            overviewLabel.text = movie.overview
         case .tvShow(let tvShow):
             break
         }
@@ -124,17 +147,44 @@ class MediaViewController: UIViewController {
 
 extension MediaViewController {
     func setupConstraints() {
+
         view.addSubview(posterImage)
         posterImage.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
             make.height.equalTo(450)
         }
 
-        posterImage.addSubview(ratingStar)
-        ratingStar.snp.makeConstraints { make in
+        view.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
             make.bottom.equalTo(posterImage)
-            make.left.right.equalToSuperview().inset(130)
+            make.left.equalToSuperview().inset(10)
+            make.right.equalToSuperview()
+        }
 
+        view.addSubview(releaseDate)
+        releaseDate.snp.makeConstraints { make in
+            make.top.equalTo(posterImage.snp_bottomMargin).inset(-15)
+            make.left.equalToSuperview().inset(10)
+        }
+
+        view.addSubview(ratingStar)
+        ratingStar.snp.makeConstraints { make in
+            make.top.equalTo(releaseDate.snp_bottomMargin).inset(-15)
+            make.left.equalToSuperview().inset(10)
+
+        }
+
+        view.addSubview(overviewLabel)
+        overviewLabel.snp.makeConstraints { make in
+            make.top.equalTo(ratingStar.snp_bottomMargin).inset(-15)
+            make.left.equalToSuperview().inset(10)
+            make.right.equalToSuperview()
+        }
+
+        view.addSubview(castLabel)
+        castLabel.snp.makeConstraints { make in
+            make.top.equalTo(overviewLabel.snp_bottomMargin).inset(-15)
+            make.left.equalToSuperview().inset(10)
         }
 
 
