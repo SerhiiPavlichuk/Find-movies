@@ -10,20 +10,20 @@ import SDWebImage
 
 class MoviesCollectionViewCell: UICollectionViewCell {
 
-    private let posterImage: UIImageView = {
+    private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
         posterImage.contentMode = .scaleAspectFill
         return posterImage
     }()
 
-    private let title: UILabel = {
+    private lazy var title: UILabel = {
         let title = UILabel()
         title.textColor = .customWhite
         title.font.withSize(18)
         return title
     }()
 
-    private let releaseDate: UILabel = {
+    private lazy var releaseDate: UILabel = {
         let releaseDate = UILabel()
         releaseDate.textColor = .customGray
         releaseDate.font.withSize(14)
@@ -32,9 +32,11 @@ class MoviesCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.clipsToBounds = true
         contentView.addSubview(posterImage)
         contentView.addSubview(title)
         contentView.addSubview(releaseDate)
+        
     }
 
     required init?(coder: NSCoder) {
@@ -46,9 +48,13 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         posterImage.sizeToFit()
         title.sizeToFit()
         releaseDate.sizeToFit()
-//                setupConstraints()
-        posterImage.frame = CGRect(x: 5, y: 5, width: 130, height: 200)
-        posterImage.layer.cornerRadius = 30
+
+//        let imageSize: CGFloat = contentView.frame.size.height - 10
+
+
+//        posterImage.frame = CGRect(x: 5, y: 5, width: 130, height: 200)
+//        posterImage.layer.cornerRadius = 30
+        setupConstraints()
     }
 
     override func prepareForReuse() {
@@ -71,19 +77,17 @@ class MoviesCollectionViewCell: UICollectionViewCell {
 
 extension MoviesCollectionViewCell {
     func setupConstraints() {
-        contentView.addSubview(posterImage)
         posterImage.snp.makeConstraints { make in
+            posterImage.layer.cornerRadius = 30
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(title).inset(5)
         }
-        contentView.addSubview(title)
         title.snp.makeConstraints { make in
             make.top.equalTo(posterImage).inset(5)
             make.left.equalToSuperview()
             make.bottom.equalTo(releaseDate).inset(5)
             make.width.height.equalTo(40)
         }
-        contentView.addSubview(releaseDate)
         releaseDate.snp.makeConstraints { make in
             make.top.equalTo(title).inset(5)
             make.left.equalToSuperview()

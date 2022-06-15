@@ -10,12 +10,13 @@ import UIKit
 import SnapKit
 
 enum SectionType {
-    case movies(viewModels: [Movie])
-    case tvShows(viewModels: [TVShowCellViewModel])
+    case movies(movie: [Movie])
+    case tvShows(tvShow: [TvShow])
 }
 
 class HomeScreenViewController: UIViewController {
 
+    private var sections = [SectionType]()
     private var movies: [Movie] = []
 //    var films: PopularMovieResult?
 
@@ -28,7 +29,7 @@ class HomeScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupTitleImage()
+
         setupCollectionView()
         loadMovies(completion: {
             self.collectionView.reloadData()
@@ -38,12 +39,19 @@ class HomeScreenViewController: UIViewController {
         })
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        navigationController?.navigationBar.backgroundColor = .clear
+        navigationController?.navigationBar.tintColor = .customWhite
+        
+        setupTitleImage()
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupConstraints()
     }
-
-    private var sections = [SectionType]()
 
     private func setupCollectionView() {
 
@@ -72,39 +80,19 @@ class HomeScreenViewController: UIViewController {
 
     private func loadMovies(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestTrendingMovies(completion: { movies in
-//            self.movies = movies
-            self.sections.append(.movies(viewModels: movies))
-//            self.configureMovieModels(movie: movies)
+            self.movies = movies
+            self.sections.append(.movies(movie: movies))
             completion()
         })
 
     }
-
-//    configure MovieModel
-//    private func configureMovieModels(movie: [Movie]) {
-//        sections.append(.movies(viewModels: movie.compactMap({ _ in
-//            return MoviesCellViewModel(
-//                posterImage: movie.first?.posterPath ?? "",
-//                releaseDate: movie.first?.releaseDate ?? "",
-//                title: movie.first?.title ?? "")
-//        })))
-//    }
 
     private func loadTVShows(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestTrendingTVShows(completion: { tvShows in
-            self.configureTVShowModels(tvShows: tvShows)
+            self.sections.append(.tvShows(tvShow: tvShows))
             completion()
         })
 
-    }
-    //configure TVShowModel
-    private func configureTVShowModels(tvShows: [TvShow]) {
-        sections.append(.tvShows(viewModels: tvShows.compactMap({_ in
-            return TVShowCellViewModel(
-                posterImage: tvShows.first?.posterPath ?? "",
-                releaseDate: tvShows.first?.firstAirDate ?? "",
-                title: tvShows.first?.name ?? "")
-        })))
     }
 
     func setupConstraints() {
@@ -119,13 +107,16 @@ class HomeScreenViewController: UIViewController {
 }
 
 extension HomeScreenViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+
+    //MARK: - DataSource
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let collectionType = sections[section]
         switch collectionType {
-        case .movies(let viewModels):
-            return viewModels.count
-        case .tvShows(let viewModels):
-            return viewModels.count
+        case .movies(let movies):
+            return movies.count
+        case .tvShows(let tvShows):
+            return tvShows.count
         }
     }
 
@@ -136,23 +127,40 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let collectionType = sections[indexPath.section]
         switch collectionType {
-        case .movies(let viewModels):
+        case .movies(let movie):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.movieCellIdentifier, for: indexPath) as? MoviesCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            let viewModels = viewModels[indexPath.row]
-            cell.configure(with: viewModels)
+            let item = movie[indexPath.row]
+            cell.configure(with: item)
             return cell
-        case .tvShows(let viewModels):
+        case .tvShows(let tvShow):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.tvShowCellIdentifier, for: indexPath) as? TVShowsCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            let viewModels = viewModels[indexPath.row]
+            let viewModels = tvShow[indexPath.row]
 
             cell.backgroundColor = .systemRed
             return cell
         }
     }
+
+    //MARK: - Delegate
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let section = sections[indexPath.section]
+        switch section {
+        case .movies:
+            let movie = self.movies[indexPath.row]
+            let vc = MediaViewController(media: .movie(movie: movie))
+            navigationController?.pushViewController(vc, animated: true)
+        case .tvShows:
+            break
+        }
+    }
+
+    //MARK: - CollectionLayotSection
 
     static func createLayout(section: Int) -> NSCollectionLayoutSection {
         switch section {
@@ -172,17 +180,14 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
                                                               trailing: nil,
                                                               bottom: nil)
             // Footer&Header
-            let footerHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                           heightDimension: .estimated(50.0))
-            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerHeaderSize,
+            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
                                                                      elementKind: UICollectionView.elementKindSectionHeader,
                                                                      alignment: .top)
-            let footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerHeaderSize,
-                                                                     elementKind: UICollectionView.elementKindSectionFooter,
-                                                                     alignment: .bottom)
             // Section
             let section = NSCollectionLayoutSection(group: group)
-            section.boundarySupplementaryItems = [header, footer]
+            section.boundarySupplementaryItems = [header]
             section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
 
             return section
