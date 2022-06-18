@@ -13,6 +13,7 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
         posterImage.contentMode = .scaleAspectFill
+        posterImage.clipsToBounds = true
         return posterImage
     }()
 
@@ -45,16 +46,17 @@ class MoviesCollectionViewCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        posterImage.sizeToFit()
-        title.sizeToFit()
-        releaseDate.sizeToFit()
+//        posterImage.sizeToFit()
+//        title.sizeToFit()
+//        releaseDate.sizeToFit()
 
 //        let imageSize: CGFloat = contentView.frame.size.height - 10
 
 
 //        posterImage.frame = CGRect(x: 5, y: 5, width: 130, height: 200)
-//        posterImage.layer.cornerRadius = 30
+
         setupConstraints()
+        posterImage.layer.cornerRadius = 16
     }
 
     override func prepareForReuse() {
@@ -80,19 +82,20 @@ extension MoviesCollectionViewCell {
         posterImage.snp.makeConstraints { make in
             posterImage.layer.cornerRadius = 30
             make.top.left.right.equalToSuperview()
-            make.bottom.equalTo(title).inset(5)
+//            make.bottom.equalTo(title).inset(5)
+            make.height.equalTo(160)
         }
         title.snp.makeConstraints { make in
-            make.top.equalTo(posterImage).inset(5)
+            make.top.equalTo(posterImage.snp_bottomMargin).inset(-10)
             make.left.equalToSuperview()
-            make.bottom.equalTo(releaseDate).inset(5)
-            make.width.height.equalTo(40)
+
+            make.width.equalToSuperview()
         }
         releaseDate.snp.makeConstraints { make in
-            make.top.equalTo(title).inset(5)
+            make.top.equalTo(title.snp_bottomMargin).inset(-10)
             make.left.equalToSuperview()
             make.bottom.equalToSuperview()
-            make.width.height.equalTo(40)
+            make.width.equalToSuperview()
         }
     }
 }

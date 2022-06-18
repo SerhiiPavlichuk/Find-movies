@@ -29,7 +29,10 @@ class HomeScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationController?.navigationBar.backgroundColor = .clear
+        tabBarController?.tabBar.barTintColor = .clear
 
+        setupTitleImage()
         setupCollectionView()
         loadMovies(completion: {
             self.collectionView.reloadData()
@@ -39,23 +42,12 @@ class HomeScreenViewController: UIViewController {
         })
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        navigationController?.navigationBar.backgroundColor = .clear
-        navigationController?.navigationBar.tintColor = .customWhite
-        
-        setupTitleImage()
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupConstraints()
     }
 
     private func setupCollectionView() {
-
-//        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.defaultCellIdentifier)
         collectionView.register(MoviesCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.movieCellIdentifier)
         collectionView.register(TVShowsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.tvShowCellIdentifier)
         collectionView.dataSource = self
@@ -154,6 +146,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
         case .movies:
             let movie = self.movies[indexPath.row]
             let vc = MediaViewController(media: .movie(movie: movie))
+            vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
             navigationController?.pushViewController(vc, animated: true)
         case .tvShows:
             break
@@ -172,7 +165,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
             // Group
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
-                                                   heightDimension: .absolute(200))
+                                                   heightDimension: .absolute(220))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                            subitems: [item])
             group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .flexible(0),

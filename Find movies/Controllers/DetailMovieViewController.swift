@@ -20,6 +20,8 @@ class MediaViewController: UIViewController {
 
     private var movie: Movie?
     private var tvShow: TvShow?
+    private var actorsArray: [Cast] = []
+    private var actors: Cast?
 
     private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
@@ -72,6 +74,20 @@ class MediaViewController: UIViewController {
         return castLabel
     }()
 
+    private lazy var actorsCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.estimatedItemSize = CGSize(width: 64, height: 24)
+        layout.itemSize = CGSize(width: 64, height: 24)
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 12
+        let actorsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        actorsCollectionView.delegate = self
+        actorsCollectionView.dataSource = self
+        actorsCollectionView.backgroundColor = .clear
+        actorsCollectionView.showsHorizontalScrollIndicator = false
+        actorsCollectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        return actorsCollectionView
+    }()
 
     init(media: MediaType) {
         switch media {
@@ -88,9 +104,12 @@ class MediaViewController: UIViewController {
     }
 
     override func viewDidLoad() {
+        actorsCollectionView.register(ActorsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.actorsCellIdentifier)
         self.tabBarController?.tabBar.isHidden = true
         createNavBarButtons()
         createUI()
+        view.backgroundColor = .customBlack
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -124,7 +143,7 @@ class MediaViewController: UIViewController {
     }
 
     @objc func addToBookmark() {
-// create save method
+        // create save method
     }
 
     private func configure(with viewModel: MediaType) {
@@ -139,13 +158,49 @@ class MediaViewController: UIViewController {
             ratingStar.rating = (movie.voteAverage ?? 0.0) / 2
             ratingStar.text = "\(movie.voteAverage ?? 0.0)"
             overviewLabel.text = movie.overview
+            loadActors {
+                self.actorsCollectionView.reloadData()
+            }
         case .tvShow(let tvShow):
             break
         }
     }
-}
 
-extension MediaViewController {
+    private func loadActors(completion: @escaping(() -> ())) {
+        NetworkManager.shared.requestMovieActors(movieId: movie, completion: { actors in
+            self.actorsArray = actors ?? []
+            let dataArray = actors ?? []
+            let actorResponce = dataArray.first
+            self.actors = actorResponce
+            completion()
+        })
+    }
+}
+//    @objc func loadSiteInSafaryButtonPressed(_ sender: Any) {
+//        if let optionalStringURL = movie.strSource {
+//            let stringUrl = String(describing: optionalStringURL)
+//            let url = URL(string: stringUrl)!
+//            let config = SFSafariViewController.Configuration()
+//            config.entersReaderIfAvailable = true
+//            let vc = SFSafariViewController(url: url, configuration: config)
+//            present(vc, animated: true)
+//        }
+//    }
+
+extension MediaViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return actorsArray.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.actorsCellIdentifier, for: indexPath) as? ActorsCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+//        let item = movie[indexPath.row]
+        cell.backgroundColor = .red
+        return cell
+    }
+
     func setupConstraints() {
 
         view.addSubview(posterImage)
@@ -187,56 +242,11 @@ extension MediaViewController {
             make.left.equalToSuperview().inset(10)
         }
 
-
-
-
-
-//        view.addSubview(locationButton)
-//        locationButton.snp.makeConstraints { make in
-//            make.left.equalTo(background).inset(15)
-//            make.top.equalTo(background).inset(40)
-//            make.width.height.equalTo(40)
-//        }
-//
-//        view.addSubview(searchButton)
-//        searchButton.snp.makeConstraints { make in
-//            make.right.equalTo(background).inset(15)
-//            make.top.equalTo(background).inset(40)
-//            make.width.height.equalTo(40)
-//        }
-//
-//        view.addSubview(searchTextField)
-//        searchTextField.snp.makeConstraints { make in
-//            make.top.equalTo(background).inset(40)
-//            make.left.equalTo(locationButton).inset(40)
-//            make.right.equalTo(searchButton).inset(40)
-//            make.height.equalTo(40)
-//
-//        }
-//
-//        view.addSubview(conditionImageView)
-//        conditionImageView.snp.makeConstraints { make in
-//            make.top.equalTo(searchTextField).inset(50)
-//            make.right.equalTo(background).inset(15)
-//            make.width.height.equalTo(120)
-//        }
-//
-//        view.addSubview(temperatureSign)
-//        temperatureSign.snp.makeConstraints { make in
-//            make.top.equalTo(conditionImageView.snp_bottomMargin)
-//            make.right.equalTo(background).offset(-15)
-//        }
-//
-//        view.addSubview(temperatureLabel)
-//        temperatureLabel.snp.makeConstraints { make in
-//            make.right.equalTo(temperatureSign.snp_leftMargin).offset(-15)
-//            make.top.equalTo(conditionImageView.snp_bottomMargin)
-//        }
-//
-//        view.addSubview(cityLabel)
-//        cityLabel.snp.makeConstraints { make in
-//            make.top.equalTo(temperatureSign.snp_bottomMargin).offset(15)
-//            make.right.equalTo(background).offset(-15)
-//        }
+        view.addSubview(actorsCollectionView)
+        actorsCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(castLabel.snp_bottomMargin).inset(-15)
+            make.left.right.equalToSuperview().inset(10)
+            make.height.equalTo(100)
+        }
     }
 }

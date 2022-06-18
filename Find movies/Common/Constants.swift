@@ -27,9 +27,9 @@ struct Constants {
     }
 
     struct UI {
-        static let defaultCellIdentifier = "Cell"
         static let movieCellIdentifier = "MoviesCollectionViewCell"
         static let tvShowCellIdentifier = "TVShowsCollectionViewCell"
+        static let actorsCellIdentifier = "ActorsCollectionViewCell"
 
     }
 }
