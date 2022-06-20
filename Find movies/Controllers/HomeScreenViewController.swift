@@ -18,7 +18,7 @@ class HomeScreenViewController: UIViewController {
 
     private var sections = [SectionType]()
     private var movies: [Movie] = []
-//    var films: PopularMovieResult?
+    private var tvShow: [TvShow] = []
 
     private lazy var collectionView: UICollectionView = UICollectionView(
         frame: .zero,
@@ -81,6 +81,7 @@ class HomeScreenViewController: UIViewController {
 
     private func loadTVShows(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestTrendingTVShows(completion: { tvShows in
+            self.tvShow = tvShows
             self.sections.append(.tvShows(tvShow: tvShows))
             completion()
         })
@@ -130,9 +131,8 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.tvShowCellIdentifier, for: indexPath) as? TVShowsCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            let viewModels = tvShow[indexPath.row]
-            
-            cell.backgroundColor = .systemRed
+            let item = tvShow[indexPath.row]
+            cell.configure(with: item)
             return cell
         }
     }
@@ -149,7 +149,10 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
             navigationController?.pushViewController(vc, animated: true)
         case .tvShows:
-            break
+            let tvShow = self.tvShow[indexPath.row]
+            let vc = MediaViewController(media: .tvShow(tvShow: tvShow))
+            vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 

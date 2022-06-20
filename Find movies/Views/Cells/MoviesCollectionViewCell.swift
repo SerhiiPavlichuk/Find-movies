@@ -77,7 +77,6 @@ extension MoviesCollectionViewCell {
     func setupConstraints() {
         posterImage.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
-//            make.bottom.equalTo(title).inset(5)
             make.height.equalTo(160)
         }
         title.snp.makeConstraints { make in

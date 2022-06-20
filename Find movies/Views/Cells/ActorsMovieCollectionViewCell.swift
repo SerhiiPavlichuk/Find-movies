@@ -39,7 +39,6 @@ class ActorsMovieCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(actorImage)
         contentView.addSubview(actorNameLabel)
         contentView.addSubview(roleNameLabel)
-
     }
 
     required init?(coder: NSCoder) {

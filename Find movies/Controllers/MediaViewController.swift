@@ -89,6 +89,15 @@ class MediaViewController: UIViewController {
         return actorsCollectionView
     }()
 
+    private lazy var webVersionButton: UIButton = {
+        let webVersionButton = UIButton()
+        webVersionButton.backgroundColor = .customRed
+        webVersionButton.layer.cornerRadius = 8
+        webVersionButton.frame.size.height = 30
+        webVersionButton.setTitle("Watch WebVersion", for: .normal)
+        return webVersionButton
+    }()
+
     init(media: MediaType) {
         switch media {
         case .movie(let movie):
@@ -162,7 +171,18 @@ class MediaViewController: UIViewController {
                 self.actorsCollectionView.reloadData()
             }
         case .tvShow(let tvShow):
-            break
+            let imagePath = tvShow.posterPath ?? ""
+            let tvShowImageUrl = Constants.network.defaultImagePath + imagePath
+            let url = URL(string: tvShowImageUrl)
+            posterImage.sd_setImage(with: url)
+            titleLabel.text = tvShow.name
+            releaseDate.text = "Release date \(tvShow.firstAirDate ?? "No date")"
+            ratingStar.rating = (tvShow.voteAverage ?? 0.0) / 2
+            ratingStar.text = "\(tvShow.voteAverage ?? 0.0)"
+            overviewLabel.text = tvShow.overview
+            loadActors {
+                self.actorsCollectionView.reloadData()
+            }
         }
     }
 
@@ -248,6 +268,13 @@ extension MediaViewController: UICollectionViewDataSource, UICollectionViewDeleg
             make.top.equalTo(castLabel.snp_bottomMargin).inset(-15)
             make.left.right.equalToSuperview().inset(10)
             make.height.equalTo(150)
+        }
+        view.addSubview(webVersionButton)
+        webVersionButton.snp.makeConstraints { make in
+            make.top.equalTo(actorsCollectionView.snp_bottomMargin).inset(-40)
+            make.left.right.equalToSuperview().inset(100)
+            make.height.equalTo(40)
+
         }
     }
 }
