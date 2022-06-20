@@ -30,6 +30,7 @@ struct Constants {
         static let movieCellIdentifier = "MoviesCollectionViewCell"
         static let tvShowCellIdentifier = "TVShowsCollectionViewCell"
         static let actorsCellIdentifier = "ActorsCollectionViewCell"
+        static let defaultImage = "defaultImage"
 
     }
 }

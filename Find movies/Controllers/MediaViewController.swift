@@ -20,8 +20,8 @@ class MediaViewController: UIViewController {
 
     private var movie: Movie?
     private var tvShow: TvShow?
-    private var actorsArray: [Cast] = []
-    private var actors: Cast?
+    private var movieActorsArray: [Cast] = []
+    private var tvShowActorsArray: [Cast] = []
 
     private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
@@ -93,7 +93,7 @@ class MediaViewController: UIViewController {
         switch media {
         case .movie(let movie):
             self.movie = movie
-        case .tvShow(tvShow: let tvShow):
+        case .tvShow(let tvShow):
             self.tvShow = tvShow
         }
         super.init(nibName: nil, bundle: nil)
@@ -104,7 +104,7 @@ class MediaViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-        actorsCollectionView.register(ActorsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.actorsCellIdentifier)
+        actorsCollectionView.register(ActorsMovieCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.actorsCellIdentifier)
         self.tabBarController?.tabBar.isHidden = true
         createNavBarButtons()
         createUI()
@@ -168,10 +168,7 @@ class MediaViewController: UIViewController {
 
     private func loadActors(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestMovieActors(movieId: movie, completion: { actors in
-            self.actorsArray = actors ?? []
-            let dataArray = actors ?? []
-            let actorResponce = dataArray.first
-            self.actors = actorResponce
+            self.movieActorsArray = actors ?? []
             completion()
         })
     }
@@ -187,18 +184,22 @@ class MediaViewController: UIViewController {
 //        }
 //    }
 
-extension MediaViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension MediaViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return actorsArray.count
+        return movieActorsArray.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.actorsCellIdentifier, for: indexPath) as? ActorsCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.actorsCellIdentifier, for: indexPath) as? ActorsMovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-//        let item = movie[indexPath.row]
-        cell.backgroundColor = .red
+        let currentActor = movieActorsArray[indexPath.row]
+        cell.configure(with: currentActor)
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 150)
     }
 
     func setupConstraints() {
@@ -206,7 +207,7 @@ extension MediaViewController: UICollectionViewDataSource, UICollectionViewDeleg
         view.addSubview(posterImage)
         posterImage.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
-            make.height.equalTo(450)
+            make.height.equalTo(400)
         }
 
         view.addSubview(titleLabel)
@@ -246,7 +247,7 @@ extension MediaViewController: UICollectionViewDataSource, UICollectionViewDeleg
         actorsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(castLabel.snp_bottomMargin).inset(-15)
             make.left.right.equalToSuperview().inset(10)
-            make.height.equalTo(100)
+            make.height.equalTo(150)
         }
     }
 }

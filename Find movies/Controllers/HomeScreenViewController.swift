@@ -131,7 +131,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
                 return UICollectionViewCell()
             }
             let viewModels = tvShow[indexPath.row]
-
+            
             cell.backgroundColor = .systemRed
             return cell
         }

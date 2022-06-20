@@ -50,10 +50,6 @@ class MoviesCollectionViewCell: UICollectionViewCell {
 //        title.sizeToFit()
 //        releaseDate.sizeToFit()
 
-//        let imageSize: CGFloat = contentView.frame.size.height - 10
-
-
-//        posterImage.frame = CGRect(x: 5, y: 5, width: 130, height: 200)
 
         setupConstraints()
         posterImage.layer.cornerRadius = 16
@@ -80,7 +76,6 @@ class MoviesCollectionViewCell: UICollectionViewCell {
 extension MoviesCollectionViewCell {
     func setupConstraints() {
         posterImage.snp.makeConstraints { make in
-            posterImage.layer.cornerRadius = 30
             make.top.left.right.equalToSuperview()
 //            make.bottom.equalTo(title).inset(5)
             make.height.equalTo(160)
