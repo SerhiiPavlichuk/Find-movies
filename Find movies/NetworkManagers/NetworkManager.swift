@@ -49,4 +49,18 @@ struct NetworkManager {
             }
         }
     }
+
+    func requestTVShowActors(tvShowId: TvShow?, completion: @escaping(([Cast]?) -> ())) {
+        if let tvShowIdForUrl = tvShowId?.id{
+            let url = Constants.network.tvShowPath + "/\(tvShowIdForUrl)" + Constants.network.tvShowActorsPath
+
+            AF.request(url).responseJSON { responce in
+                let decoder = JSONDecoder()
+                if let data = try? decoder.decode(CastAndCrewResult.self, from: responce.data!) {
+                    let actors = data.cast ?? []
+                    completion(actors)
+                }
+            }
+        }
+    }
 }

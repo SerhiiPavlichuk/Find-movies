@@ -167,7 +167,7 @@ class MediaViewController: UIViewController {
             ratingStar.rating = (movie.voteAverage ?? 0.0) / 2
             ratingStar.text = "\(movie.voteAverage ?? 0.0)"
             overviewLabel.text = movie.overview
-            loadActors {
+            loadMovieActors {
                 self.actorsCollectionView.reloadData()
             }
         case .tvShow(let tvShow):
@@ -180,15 +180,22 @@ class MediaViewController: UIViewController {
             ratingStar.rating = (tvShow.voteAverage ?? 0.0) / 2
             ratingStar.text = "\(tvShow.voteAverage ?? 0.0)"
             overviewLabel.text = tvShow.overview
-            loadActors {
+            loadTVShowActors {
                 self.actorsCollectionView.reloadData()
             }
         }
     }
 
-    private func loadActors(completion: @escaping(() -> ())) {
+    private func loadMovieActors(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestMovieActors(movieId: movie, completion: { actors in
             self.movieActorsArray = actors ?? []
+            completion()
+        })
+    }
+
+    private func loadTVShowActors(completion: @escaping(() -> ())) {
+        NetworkManager.shared.requestTVShowActors(tvShowId: tvShow,completion: { actors in
+            self.tvShowActorsArray = actors ?? []
             completion()
         })
     }
@@ -206,16 +213,27 @@ class MediaViewController: UIViewController {
 
 extension MediaViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movieActorsArray.count
+        if (movieActorsArray.count != 0) {
+            return movieActorsArray.count
+        } else {
+            return tvShowActorsArray.count
+        }
+//        return movieActorsArray.count ? tvShowActorsArray.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.actorsCellIdentifier, for: indexPath) as? ActorsMovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        let currentActor = movieActorsArray[indexPath.row]
-        cell.configure(with: currentActor)
-        return cell
+        if movieActorsArray.count != 0 {
+            let currentActor = movieActorsArray[indexPath.row]
+            cell.configure(with: currentActor)
+            return cell
+        } else {
+            let currentActor = tvShowActorsArray[indexPath.row]
+            cell.configure(with: currentActor)
+            return cell
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
