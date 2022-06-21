@@ -24,6 +24,7 @@ struct Constants {
         static let tvShowActorsPath = "/aggregate_credits?api_key=\(apiKey)&language=en-US"
         static let trendingMoviePath = "https://api.themoviedb.org/3/trending/movie/week?api_key"
         static let defaultImagePath = "https://image.tmdb.org/t/p/original"
+        static let mediaWeb = "/watch/providers?api_key=\(apiKey)"
 
     }
 

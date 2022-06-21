@@ -10,6 +10,7 @@ import UIKit
 import SDWebImage
 import SnapKit
 import Cosmos
+import SafariServices
 
 enum MediaType {
     case movie(movie: Movie)
@@ -95,6 +96,7 @@ class MediaViewController: UIViewController {
         webVersionButton.layer.cornerRadius = 8
         webVersionButton.frame.size.height = 30
         webVersionButton.setTitle("Watch WebVersion", for: .normal)
+        webVersionButton.addTarget(self, action: #selector(loadSiteInSafaryButtonPressed), for: .touchUpInside)
         return webVersionButton
     }()
 
@@ -199,17 +201,32 @@ class MediaViewController: UIViewController {
             completion()
         })
     }
+
+    //MARK: - Action works but looks like it needs to be fixed
+    @objc private func loadSiteInSafaryButtonPressed(_ sender: Any) {
+        if (movieActorsArray.count != 0) {
+            NetworkManager.shared.requestMovieURL(movieId: movie, completion: { movieUrl in
+                if let unwrapedUrl = movieUrl {
+                    let url = URL(string: unwrapedUrl)!
+                    let config = SFSafariViewController.Configuration()
+                    config.entersReaderIfAvailable = true
+                    let vc = SFSafariViewController(url: url, configuration: config)
+                    self.present(vc, animated: true)
+                }
+            })
+        } else {
+            NetworkManager.shared.requestTVShowURL(tvShowId: tvShow, completion: { tvShowUrl in
+                if let unwrapedUrl = tvShowUrl {
+                    let url = URL(string: unwrapedUrl)!
+                    let config = SFSafariViewController.Configuration()
+                    config.entersReaderIfAvailable = true
+                    let vc = SFSafariViewController(url: url, configuration: config)
+                    self.present(vc, animated: true)
+                }
+            })
+        }
+    }
 }
-//    @objc func loadSiteInSafaryButtonPressed(_ sender: Any) {
-//        if let optionalStringURL = movie.strSource {
-//            let stringUrl = String(describing: optionalStringURL)
-//            let url = URL(string: stringUrl)!
-//            let config = SFSafariViewController.Configuration()
-//            config.entersReaderIfAvailable = true
-//            let vc = SFSafariViewController(url: url, configuration: config)
-//            present(vc, animated: true)
-//        }
-//    }
 
 extension MediaViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -218,7 +235,6 @@ extension MediaViewController: UICollectionViewDataSource, UICollectionViewDeleg
         } else {
             return tvShowActorsArray.count
         }
-//        return movieActorsArray.count ? tvShowActorsArray.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

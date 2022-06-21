@@ -76,7 +76,6 @@ class HomeScreenViewController: UIViewController {
             self.sections.append(.movies(movie: movies))
             completion()
         })
-
     }
 
     private func loadTVShows(completion: @escaping(() -> ())) {

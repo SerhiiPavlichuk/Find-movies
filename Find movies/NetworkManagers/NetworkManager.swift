@@ -63,4 +63,32 @@ struct NetworkManager {
             }
         }
     }
+
+    func requestMovieURL(movieId: Movie?, completion: @escaping((String?) -> ())) {
+        if let movieIdForUrl = movieId?.id{
+            let url = Constants.network.moviePath + "/\(movieIdForUrl)" + Constants.network.mediaWeb
+
+            AF.request(url).responseJSON { responce in
+                let decoder = JSONDecoder()
+                if let data = try? decoder.decode(ForWeb.self, from: responce.data!) {
+                    let url = data.results?.gB
+                    completion(url?.link)
+                }
+            }
+        }
+    }
+
+    func requestTVShowURL(tvShowId: TvShow?, completion: @escaping((String?) -> ())) {
+        if let tvShowIdForUrl = tvShowId?.id{
+            let url = Constants.network.tvShowPath + "/\(tvShowIdForUrl)" + Constants.network.mediaWeb
+
+            AF.request(url).responseJSON { responce in
+                let decoder = JSONDecoder()
+                if let data = try? decoder.decode(ForWeb.self, from: responce.data!) {
+                    let url = data.results?.gB
+                    completion(url?.link)
+                }
+            }
+        }
+    }
 }
