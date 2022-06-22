@@ -61,6 +61,7 @@ class HomeScreenViewController: UIViewController {
     private func setupCollectionView() {
         collectionView.register(MoviesCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.movieCellIdentifier)
         collectionView.register(TVShowsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.tvShowCellIdentifier)
+        collectionView.register(SectionHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderReusableView.reuseID)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .clear
@@ -150,6 +151,27 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
         }
     }
 
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+        let collectionType = sections[indexPath.section]
+        switch collectionType {
+        case .movies(movie: let movie):
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderReusableView.reuseID, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
+                return UICollectionReusableView()
+            }
+            let item = movie[indexPath.row]
+            header.configure(with: .movie(movie: item))
+            return header
+        case .tvShows(tvShow: let tvShow):
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderReusableView.reuseID, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
+                return UICollectionReusableView()
+            }
+            let item = tvShow[indexPath.row]
+            header.configure(with: .tvShow(tvShow: item))
+            return header
+        }
+    }
+
     //MARK: - Delegate
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -181,7 +203,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
             // Group
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
-                                                   heightDimension: .absolute(220))
+                                                   heightDimension: .fractionalHeight(0.38))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                            subitems: [item])
             group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .flexible(0),
@@ -198,7 +220,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             let section = NSCollectionLayoutSection(group: group)
             section.boundarySupplementaryItems = [header]
             section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-
+            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0)
             return section
 
         case 1:
@@ -209,7 +231,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
             // Group
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
-                                                   heightDimension: .absolute(200))
+                                                   heightDimension: .fractionalHeight(0.38))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                            subitems: [item])
             group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .flexible(0),
@@ -222,14 +244,12 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerHeaderSize,
                                                                      elementKind: UICollectionView.elementKindSectionHeader,
                                                                      alignment: .top)
-            let footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerHeaderSize,
-                                                                     elementKind: UICollectionView.elementKindSectionFooter,
-                                                                     alignment: .bottom)
             // Section
             let section = NSCollectionLayoutSection(group: group)
-            section.boundarySupplementaryItems = [header, footer]
+            section.boundarySupplementaryItems = [header]
             section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-
+            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0)
+            
             return section
 
         default:
@@ -253,12 +273,10 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
             let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerHeaderSize,
                                                                      elementKind: UICollectionView.elementKindSectionHeader,
                                                                      alignment: .top)
-            let footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerHeaderSize,
-                                                                     elementKind: UICollectionView.elementKindSectionFooter,
-                                                                     alignment: .bottom)
+
             // Section
             let section = NSCollectionLayoutSection(group: group)
-            section.boundarySupplementaryItems = [header, footer]
+            section.boundarySupplementaryItems = [header]
             section.orthogonalScrollingBehavior = .groupPaging
 
             return section
