@@ -19,6 +19,8 @@ enum MediaType {
 
 class MediaViewController: UIViewController {
 
+    //MARK: - Properties
+
     private var movie: Movie?
     private var tvShow: TvShow?
     private var movieActorsArray: [Cast] = []
@@ -100,6 +102,8 @@ class MediaViewController: UIViewController {
         return webVersionButton
     }()
 
+    //MARK: - Init
+
     init(media: MediaType) {
         switch media {
         case .movie(let movie):
@@ -113,6 +117,8 @@ class MediaViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    //MARK: - Life Cycle
 
     override func viewDidLoad() {
         actorsCollectionView.register(ActorsMovieCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.actorsCellIdentifier)
@@ -133,6 +139,8 @@ class MediaViewController: UIViewController {
         setupConstraints()
     }
 
+    //MARK: - Create UI
+
     private func createNavBarButtons() {
         let leftButton = UIBarButtonItem(image: UIImage.backIcon, style: .plain, target: self, action: #selector(backButtonPressed))
         let rightButton = UIBarButtonItem(image: UIImage.bookmarkIcon, style: .plain, target: self, action: #selector(addToBookmark))
@@ -149,13 +157,7 @@ class MediaViewController: UIViewController {
         }
     }
 
-    @objc func backButtonPressed() {
-        self.navigationController?.popToRootViewController(animated: true)
-    }
-
-    @objc func addToBookmark() {
-        // create save method
-    }
+    //MARK: - Configure MediaController
 
     private func configure(with viewModel: MediaType) {
         switch viewModel {
@@ -188,6 +190,8 @@ class MediaViewController: UIViewController {
         }
     }
 
+    //MARK: - Load Actors
+
     private func loadMovieActors(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestMovieActors(movieId: movie, completion: { actors in
             self.movieActorsArray = actors ?? []
@@ -202,7 +206,18 @@ class MediaViewController: UIViewController {
         })
     }
 
-    //MARK: - Action works but looks like it needs to be fixed
+    //MARK: - Actions
+
+    @objc func backButtonPressed() {
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+
+    @objc func addToBookmark() {
+        // create save method
+    }
+
+    //MARK: - Action works but looks like it needs to be fixed!
+
     @objc private func loadSiteInSafaryButtonPressed(_ sender: Any) {
         if (movieActorsArray.count != 0) {
             NetworkManager.shared.requestMovieURL(movieId: movie, completion: { movieUrl in
@@ -229,6 +244,9 @@ class MediaViewController: UIViewController {
 }
 
 extension MediaViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+    //MARK: - DataSource
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (movieActorsArray.count != 0) {
             return movieActorsArray.count
@@ -252,9 +270,13 @@ extension MediaViewController: UICollectionViewDataSource, UICollectionViewDeleg
         }
     }
 
+    //MARK: - CollectionViewLayout
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 150)
     }
+
+    //MARK: - Constrains
 
     func setupConstraints() {
 

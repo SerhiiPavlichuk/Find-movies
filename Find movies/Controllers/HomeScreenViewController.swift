@@ -16,6 +16,8 @@ enum SectionType {
 
 class HomeScreenViewController: UIViewController {
 
+    //MARK: - Properties
+
     private var sections = [SectionType]()
     private var movies: [Movie] = []
     private var tvShow: [TvShow] = []
@@ -26,13 +28,15 @@ class HomeScreenViewController: UIViewController {
             return Self.createLayout(section: sectionIndex)
         })
 
+    //MARK: - Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationController?.navigationBar.backgroundColor = .clear
         tabBarController?.tabBar.barTintColor = .clear
 
-        setupTitleImage()
+
         setupCollectionView()
         loadMovies(completion: {
             self.collectionView.reloadData()
@@ -42,10 +46,17 @@ class HomeScreenViewController: UIViewController {
         })
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupTitleImage()
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupConstraints()
     }
+
+    //MARK: - SetupCollectionView
 
     private func setupCollectionView() {
         collectionView.register(MoviesCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.movieCellIdentifier)
@@ -54,6 +65,8 @@ class HomeScreenViewController: UIViewController {
         collectionView.delegate = self
         collectionView.backgroundColor = .clear
     }
+    
+    //MARK: - Setup UI
 
     private func setupTitleImage() {
         view.backgroundColor = .customBlack
@@ -61,7 +74,7 @@ class HomeScreenViewController: UIViewController {
         let container = UIView(frame: CGRect(x: 0, y: 0, width: 182, height: 95))
         container.backgroundColor = UIColor.clear
 
-        let imageView = UIImageView(frame:  CGRect(x: -80, y: 2, width: 182, height: 95))
+        let imageView = UIImageView(frame:  CGRect(x: -80, y: -12, width: 182, height: 95))
         imageView.contentMode = .scaleAspectFit
         imageView.image = logo
 
@@ -69,6 +82,18 @@ class HomeScreenViewController: UIViewController {
 
         self.navigationItem.titleView = container
     }
+
+    private func setupConstraints() {
+        view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { make in
+            make.left.equalTo(10)
+            make.right.equalTo(-10)
+            make.top.equalTo(140)
+            make.bottom.equalTo(-90)
+        }
+    }
+
+    //MARK: - Load Media
 
     private func loadMovies(completion: @escaping(() -> ())) {
         NetworkManager.shared.requestTrendingMovies(completion: { movies in
@@ -84,17 +109,6 @@ class HomeScreenViewController: UIViewController {
             self.sections.append(.tvShows(tvShow: tvShows))
             completion()
         })
-
-    }
-
-    func setupConstraints() {
-        view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
-            make.left.equalTo(10)
-            make.right.equalTo(-10)
-            make.top.equalTo(140)
-            make.bottom.equalTo(-90)
-        }
     }
 }
 
@@ -176,7 +190,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
                                                               bottom: nil)
             // Footer&Header
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                          heightDimension: .estimated(50.0))
+                                                    heightDimension: .estimated(50.0))
             let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
                                                                      elementKind: UICollectionView.elementKindSectionHeader,
                                                                      alignment: .top)
