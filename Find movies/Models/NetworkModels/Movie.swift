@@ -57,4 +57,12 @@ struct Movie: Codable {
         popularity = try values.decodeIfPresent(Double.self, forKey: .popularity)
         mediaType = try values.decodeIfPresent(String.self, forKey: .mediaType)
     }
+
+    init(from movieRealm: MovieRealm) {
+        self.title = movieRealm.title
+        self.popularity = movieRealm.popularity
+        self.overview = movieRealm.overview
+        self.id = movieRealm.id
+        self.posterPath = movieRealm.posterPath
+    }
 }

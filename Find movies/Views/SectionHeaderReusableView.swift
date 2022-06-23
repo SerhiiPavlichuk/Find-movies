@@ -31,12 +31,8 @@ final class SectionHeaderReusableView: UICollectionReusableView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        //        posterImage.sizeToFit()
-        //        title.sizeToFit()
-        //        releaseDate.sizeToFit()
-
-
         setupConstraints()
+
     }
 
     func configure(with viewModel: HeaderType) {

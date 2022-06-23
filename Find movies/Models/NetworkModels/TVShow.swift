@@ -58,4 +58,12 @@ struct TvShow : Codable {
         popularity = try values.decodeIfPresent(Double.self, forKey: .popularity)
         mediaType = try values.decodeIfPresent(String.self, forKey: .mediaType)
     }
+
+    init(from tvShowRealm: TvShowRealm) {
+          self.name = tvShowRealm.name
+          self.popularity = tvShowRealm.popularity
+          self.overview = tvShowRealm.overview
+          self.id = tvShowRealm.id
+          self.posterPath = tvShowRealm.posterPath
+      }
 }

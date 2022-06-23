@@ -10,5 +10,6 @@ target 'Find movies' do
 	pod 'Alamofire'
 	pod 'SDWebImage'
 	pod 'Cosmos'
+	pod 'RealmSwift'
 
 end

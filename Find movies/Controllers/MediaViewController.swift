@@ -206,14 +206,47 @@ class MediaViewController: UIViewController {
         })
     }
 
+    //MARK: - Realm
+
+    private func saveMediaInRealm(_ media: MediaType, completion: @escaping(() -> ())) {
+        switch media {
+        case .movie(movie: let movie):
+            MovieRealmManager.shared.saveMovie(movie, completion: completion)
+        case .tvShow(tvShow: let tvShow):
+            TVShowRealmManager.shared.saveTvShow(tvShow, completion: completion)
+        }
+    }
+
     //MARK: - Actions
 
     @objc func backButtonPressed() {
         self.navigationController?.popToRootViewController(animated: true)
     }
 
+    //MARK: - Action works but looks like it needs to be fixed!
+    
     @objc func addToBookmark() {
-        // create save method
+        if (movieActorsArray.count != 0) {
+            saveMediaInRealm(.movie(movie: movie!), completion: {
+                let alert = UIAlertController(title: Constants.UI.mediaSavedAlert,
+                                              message: nil,
+                                              preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: Constants.UI.okMessage,
+                                              style: UIAlertAction.Style.default,
+                                              handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+        } else {
+            saveMediaInRealm(.tvShow(tvShow: tvShow!), completion: {
+                let alert = UIAlertController(title: Constants.UI.mediaSavedAlert,
+                                              message: nil,
+                                              preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: Constants.UI.okMessage,
+                                              style: UIAlertAction.Style.default,
+                                              handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
     }
 
     //MARK: - Action works but looks like it needs to be fixed!

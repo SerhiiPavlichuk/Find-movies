@@ -1,6 +1,11 @@
 PODS:
   - Alamofire (5.6.1)
   - Cosmos (23.0.0)
+  - Realm (10.28.0):
+    - Realm/Headers (= 10.28.0)
+  - Realm/Headers (10.28.0)
+  - RealmSwift (10.28.0):
+    - Realm (= 10.28.0)
   - SDWebImage (5.12.5):
     - SDWebImage/Core (= 5.12.5)
   - SDWebImage/Core (5.12.5)
@@ -9,6 +14,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - Cosmos
+  - RealmSwift
   - SDWebImage
   - SnapKit
 
@@ -16,15 +22,19 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - Cosmos
+    - Realm
+    - RealmSwift
     - SDWebImage
     - SnapKit
 
 SPEC CHECKSUMS:
   Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
   Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
+  Realm: a0dd4e07530faaa327244ddb4ecb445c98f0537a
+  RealmSwift: 625a21f03e01e80f6b9b86bade269ebebcd7892c
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 893d9e666e7c31e55d29aa26c2693d203cb6478b
+PODFILE CHECKSUM: 8caec89d649eea81128a1fee4b06ee87236f5fe2
 
 COCOAPODS: 1.11.3
