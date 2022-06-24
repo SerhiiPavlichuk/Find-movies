@@ -98,7 +98,7 @@ class BookmarkScreenViewController: UIViewController {
     }
 }
 
-extension BookmarkScreenViewController: UITableViewDataSource,UITableViewDelegate {
+extension BookmarkScreenViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let selectedIndex = segmentedControl.selectedSegmentIndex
         switch selectedIndex {
@@ -136,5 +136,55 @@ extension BookmarkScreenViewController: UITableViewDataSource,UITableViewDelegat
         default:
             return UITableViewCell()
         }
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+        let selectedIndex = segmentedControl.selectedSegmentIndex
+        if editingStyle == .delete {
+            switch selectedIndex {
+            case 0:
+                let item = movies[indexPath.row]
+                tableView.beginUpdates()
+                movies.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.endUpdates()
+                do {
+                    try realm?.write {
+                        realm?.delete(item)
+                    }
+                } catch {
+                    print(fatalError())
+
+                }
+
+            case 1:
+                let item = tvShows[indexPath.row]
+                tableView.beginUpdates()
+                tvShows.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.endUpdates()
+                do {
+                    try realm?.write {
+                        realm?.delete(item)
+                    }
+                } catch {
+                    print(fatalError())
+
+                }
+            default: break
+            }
+        }
+    }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+            -> UISwipeActionsConfiguration? {
+            let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completionHandler) in
+                // delete the item here
+                completionHandler(true)
+            }
+            deleteAction.image = UIImage(named: "trash-bin")
+            deleteAction.backgroundColor = .customBlack
+            let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+            return configuration
     }
 }
