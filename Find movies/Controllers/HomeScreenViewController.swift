@@ -32,11 +32,9 @@ class HomeScreenViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         navigationController?.navigationBar.backgroundColor = .clear
         tabBarController?.tabBar.barTintColor = .clear
-
-
+        
         setupCollectionView()
         loadMovies(completion: {
             self.collectionView.reloadData()
@@ -61,7 +59,7 @@ class HomeScreenViewController: UIViewController {
     private func setupCollectionView() {
         collectionView.register(MoviesCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.movieCellIdentifier)
         collectionView.register(TVShowsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.tvShowCellIdentifier)
-        collectionView.register(SectionHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderReusableView.reuseID)
+        collectionView.register(SectionHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.UI.headerIdentifier)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .clear
@@ -70,7 +68,6 @@ class HomeScreenViewController: UIViewController {
     //MARK: - Setup UI
 
     private func setupTitleImage() {
-        view.backgroundColor = .customBlack
         let logo = UIImage.logoTitle
         let container = UIView(frame: CGRect(x: 0, y: 0, width: 182, height: 95))
         container.backgroundColor = UIColor.clear
@@ -156,14 +153,14 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
         let collectionType = sections[indexPath.section]
         switch collectionType {
         case .movies(movie: let movie):
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderReusableView.reuseID, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.UI.headerIdentifier, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
                 return UICollectionReusableView()
             }
             let item = movie[indexPath.row]
             header.configure(with: .movie(movie: item))
             return header
         case .tvShows(tvShow: let tvShow):
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderReusableView.reuseID, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.UI.headerIdentifier, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
                 return UICollectionReusableView()
             }
             let item = tvShow[indexPath.row]

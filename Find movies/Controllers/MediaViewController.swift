@@ -125,7 +125,6 @@ class MediaViewController: UIViewController {
         self.tabBarController?.tabBar.isHidden = true
         createNavBarButtons()
         createUI()
-        view.backgroundColor = .customBlack
 
     }
 

@@ -1,5 +1,5 @@
 //
-//  MoviesCollectionViewCell.swift
+//  TVShowsCollectionViewCell.swift
 //  Find movies
 //
 //  Created by admin on 09.06.2022.
@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class MoviesCollectionViewCell: UICollectionViewCell {
+class TVShowsCollectionViewCell: UICollectionViewCell {
 
     private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
@@ -37,7 +37,7 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(posterImage)
         contentView.addSubview(title)
         contentView.addSubview(releaseDate)
-        
+
     }
 
     required init?(coder: NSCoder) {
@@ -46,34 +46,28 @@ class MoviesCollectionViewCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-//        posterImage.sizeToFit()
-//        title.sizeToFit()
-//        releaseDate.sizeToFit()
-
-
         setupConstraints()
         posterImage.layer.cornerRadius = 16
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
         posterImage.image = nil
         title.text = nil
         releaseDate.text = nil
     }
 
-    func configure(with viewModel: Movie) {
+    func configure(with viewModel: TvShow) {
         let imagePath = viewModel.posterPath ?? ""
         let movieImageUrl = Constants.network.defaultImagePath + imagePath
         let url = URL(string: movieImageUrl)
         posterImage.sd_setImage(with: url)
-        title.text = viewModel.title
-        releaseDate.text = viewModel.releaseDate
+        title.text = viewModel.name
+        releaseDate.text = viewModel.firstAirDate
     }
 }
 
-extension MoviesCollectionViewCell {
+extension TVShowsCollectionViewCell {
     func setupConstraints() {
         posterImage.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
@@ -82,7 +76,6 @@ extension MoviesCollectionViewCell {
         title.snp.makeConstraints { make in
             make.top.equalTo(posterImage.snp_bottomMargin).inset(-10)
             make.left.equalToSuperview()
-
             make.width.equalToSuperview()
         }
         releaseDate.snp.makeConstraints { make in

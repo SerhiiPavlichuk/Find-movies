@@ -11,7 +11,6 @@ class TabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupTabBar()
 
     }
@@ -21,7 +20,6 @@ class TabBarController: UITabBarController {
     }
 
     private func setupTabBar() {
-
         let bookmarkIcon: UIImage = .bookmarkIcon
         let userIcon: UIImage = .userIcon
         let homeIcon: UIImage = .homeIcon
@@ -65,7 +63,7 @@ class TabBarController: UITabBarController {
         homeVC.navigationBar.prefersLargeTitles = true
         let bookmarkVC = UINavigationController(rootViewController: BookmarkScreenViewController())
         let categoriesVC = UINavigationController(rootViewController: CategoriesScreenViewController())
-        let controllers = [homeVC, bookmarkVC, categoriesVC]
+        let controllers = [homeVC, categoriesVC, bookmarkVC]
         return controllers
     }
 }

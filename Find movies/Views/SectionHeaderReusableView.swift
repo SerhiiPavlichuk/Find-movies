@@ -14,8 +14,6 @@ enum HeaderType {
 
 final class SectionHeaderReusableView: UICollectionReusableView {
 
-    static let reuseID = "SectionHeaderReusableView"
-
     private lazy var title: UILabel = {
         let title = UILabel()
         title.textColor = .customWhite
