@@ -22,6 +22,9 @@ struct TvShow : Codable {
     let overview : String?
     let popularity : Double?
     var mediaType : String?
+    var ratingString: String {
+        return String(format: "%.1f", voteAverage!)
+    }
 
     enum CodingKeys: String, CodingKey {
 

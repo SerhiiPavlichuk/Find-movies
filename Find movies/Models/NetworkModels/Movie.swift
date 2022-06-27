@@ -7,6 +7,14 @@
 
 import Foundation
 
+struct Media {
+
+//    name
+//    image
+
+//    var type: EnumType = .type
+}
+
 struct Movie: Codable {
 
     var adult: Bool?
@@ -23,6 +31,9 @@ struct Movie: Codable {
     let title: String?
     let popularity: Double?
     var mediaType: String?
+    var ratingString: String {
+        return String(format: "%.1f", voteAverage!)
+    }
 
     enum CodingKeys: String, CodingKey {
 

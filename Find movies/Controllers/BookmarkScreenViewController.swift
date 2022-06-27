@@ -12,6 +12,8 @@ import RealmSwift
 
 class BookmarkScreenViewController: UIViewController {
 
+    //MARK: - Properties
+    
     private let realm = try? Realm()
     private var tvShows: [TvShowRealm] = []
     private var movies: [MovieRealm] = []
@@ -32,6 +34,8 @@ class BookmarkScreenViewController: UIViewController {
         return segmentedControll
     }()
 
+    //MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -53,9 +57,7 @@ class BookmarkScreenViewController: UIViewController {
         
     }
 
-    @objc private func segmentedControlChanged() {
-        tableView.reloadData()
-    }
+    //MARK: - Setup UI
 
     private func setupTableView() {
         tableView.register(MoviesTableViewCell.self, forCellReuseIdentifier: Constants.UI.movieTableViewCell)
@@ -63,6 +65,23 @@ class BookmarkScreenViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
     }
+
+    private func setupConstraints() {
+        view.addSubview(segmentedControl)
+        segmentedControl.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(100)
+            make.left.right.equalToSuperview().inset(100)
+            make.height.equalTo(30)
+        }
+
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(segmentedControl.snp_bottomMargin).inset(-20)
+            make.left.right.bottom.equalToSuperview()
+        }
+    }
+
+    //MARK: - Load Content
 
     private func getTvShow() -> [TvShowRealm] {
         var tvShow = [TvShowRealm]()
@@ -82,23 +101,15 @@ class BookmarkScreenViewController: UIViewController {
         return movies
     }
 
-    private func setupConstraints() {
-        view.addSubview(segmentedControl)
-        segmentedControl.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(100)
-            make.left.right.equalToSuperview().inset(100)
-            make.height.equalTo(30)
-        }
-
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(segmentedControl.snp_bottomMargin).inset(-20)
-            make.left.right.bottom.equalToSuperview()
-        }
+    @objc private func segmentedControlChanged() {
+        tableView.reloadData()
     }
 }
 
 extension BookmarkScreenViewController: UITableViewDataSource, UITableViewDelegate {
+
+    //MARK: - DataSource
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let selectedIndex = segmentedControl.selectedSegmentIndex
         switch selectedIndex {
@@ -109,10 +120,6 @@ extension BookmarkScreenViewController: UITableViewDataSource, UITableViewDelega
         default:
             return 0
         }
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 250
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -138,53 +145,44 @@ extension BookmarkScreenViewController: UITableViewDataSource, UITableViewDelega
         }
     }
 
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    //MARK: - Delegate
 
-        let selectedIndex = segmentedControl.selectedSegmentIndex
-        if editingStyle == .delete {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+    -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: nil) { [self] (_, _, completionHandler) in
+            let selectedIndex = self.segmentedControl.selectedSegmentIndex
             switch selectedIndex {
             case 0:
-                let item = movies[indexPath.row]
+                let item = self.movies[indexPath.row]
                 tableView.beginUpdates()
-                movies.remove(at: indexPath.row)
+                self.movies.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 tableView.endUpdates()
-                do {
-                    try realm?.write {
-                        realm?.delete(item)
-                    }
-                } catch {
-                    print(fatalError())
-
+                try! self.realm?.write {
+                    realm?.delete(item)
                 }
-
             case 1:
-                let item = tvShows[indexPath.row]
+                let item = self.tvShows[indexPath.row]
                 tableView.beginUpdates()
-                tvShows.remove(at: indexPath.row)
+                self.tvShows.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 tableView.endUpdates()
-                do {
-                    try realm?.write {
-                        realm?.delete(item)
-                    }
-                } catch {
-                    print(fatalError())
-
+                try! self.realm?.write {
+                    realm?.delete(item)
                 }
-            default: break
+            default:
+                break
             }
+            completionHandler(true)
         }
+        deleteAction.image = UIImage(named: "trash-bin")
+        deleteAction.backgroundColor = .customBlack
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
     }
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
-            -> UISwipeActionsConfiguration? {
-            let deleteAction = UIContextualAction(style: .destructive, title: nil) { (_, _, completionHandler) in
-                // delete the item here
-                completionHandler(true)
-            }
-            deleteAction.image = UIImage(named: "trash-bin")
-            deleteAction.backgroundColor = .customBlack
-            let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
-            return configuration
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 250
     }
 }
+

@@ -98,6 +98,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8412C2132868DB2A0081A58E /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		8443B5D52850C69E00A36452 /* Extentions */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +189,7 @@
 		8475653B28507D4B00822E74 /* Find movies */ = {
 			isa = PBXGroup;
 			children = (
+				8412C2132868DB2A0081A58E /* ViewModels */,
 				8443B5EA2851C90D00A36452 /* Views */,
 				8443B5E92851C90500A36452 /* Controllers */,
 				8443B5E82851C8FD00A36452 /* Models */,

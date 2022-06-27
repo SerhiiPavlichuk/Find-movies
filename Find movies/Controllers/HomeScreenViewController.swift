@@ -175,9 +175,9 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
         collectionView.deselectItem(at: indexPath, animated: true)
         let section = sections[indexPath.section]
         switch section {
-        case .movies:
+        case .movies: // сделать общий массив медиа
             let movie = self.movies[indexPath.row]
-            let vc = MediaViewController(media: .movie(movie: movie))
+            let vc = MediaViewController(media: .movie(movie: movie)) // тут мы берем тип из моделей если нужен
             vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
             navigationController?.pushViewController(vc, animated: true)
         case .tvShows:
@@ -190,7 +190,7 @@ extension HomeScreenViewController: UICollectionViewDataSource, UICollectionView
 
     //MARK: - CollectionLayotSection
 
-    static func createLayout(section: Int) -> NSCollectionLayoutSection {
+    static func createLayout(section: Int) -> NSCollectionLayoutSection { //вынести реализацию в один метод
         switch section {
         case 0:
             // Item

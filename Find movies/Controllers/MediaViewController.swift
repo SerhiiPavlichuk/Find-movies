@@ -26,6 +26,7 @@ class MediaViewController: UIViewController {
     private var movieActorsArray: [Cast] = []
     private var tvShowActorsArray: [Cast] = []
 
+
     private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
         posterImage.contentMode = .scaleAspectFill
@@ -168,7 +169,7 @@ class MediaViewController: UIViewController {
             titleLabel.text = movie.title
             releaseDate.text = "Release date \(movie.releaseDate ?? "No date")"
             ratingStar.rating = (movie.voteAverage ?? 0.0) / 2
-            ratingStar.text = "\(movie.voteAverage ?? 0.0)"
+            ratingStar.text = "\(movie.ratingString)"
             overviewLabel.text = movie.overview
             loadMovieActors {
                 self.actorsCollectionView.reloadData()
@@ -181,7 +182,7 @@ class MediaViewController: UIViewController {
             titleLabel.text = tvShow.name
             releaseDate.text = "Release date \(tvShow.firstAirDate ?? "No date")"
             ratingStar.rating = (tvShow.voteAverage ?? 0.0) / 2
-            ratingStar.text = "\(tvShow.voteAverage ?? 0.0)"
+            ratingStar.text = "\(tvShow.ratingString)"
             overviewLabel.text = tvShow.overview
             loadTVShowActors {
                 self.actorsCollectionView.reloadData()
