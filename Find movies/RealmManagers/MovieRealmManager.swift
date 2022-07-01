@@ -21,7 +21,7 @@ struct MovieRealmManager {
         let movieRealm = MovieRealm()
 
         movieRealm.title = movie.title ?? ""
-        movieRealm.popularity = movie.popularity ?? 0.0
+        movieRealm.voteAverage = movie.voteAverage ?? 0.0
         movieRealm.overview = movie.overview ?? ""
         movieRealm.id = movie.id ?? 0
         movieRealm.posterPath = movie.posterPath ?? ""

@@ -9,18 +9,12 @@ import Foundation
 import UIKit
 import SnapKit
 
-enum SectionType {
-    case movies(movie: [Movie])
-    case tvShows(tvShow: [TvShow])
-}
-
 class HomeScreenViewController: UIViewController {
 
     //MARK: - Properties
-
-    private var sections = [SectionType]()
-    private var movies: [Movie] = []
-    private var tvShow: [TvShow] = []
+    
+    private let viewModel = HomeScreenViewModel()
+    private var dataSource: UICollectionViewDiffableDataSource<SectionType, SectionType>?
 
     private lazy var collectionView: UICollectionView = UICollectionView(
         frame: .zero,
@@ -36,10 +30,12 @@ class HomeScreenViewController: UIViewController {
         tabBarController?.tabBar.barTintColor = .clear
         
         setupCollectionView()
-        loadMovies(completion: {
+//        createDataSource()
+//        reloadData()
+        viewModel.loadMovies(completion: {
             self.collectionView.reloadData()
         })
-        loadTVShows(completion: {
+        viewModel.loadTVShows(completion: {
             self.collectionView.reloadData()
         })
     }
@@ -60,8 +56,8 @@ class HomeScreenViewController: UIViewController {
         collectionView.register(MoviesCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.movieCellIdentifier)
         collectionView.register(TVShowsCollectionViewCell.self, forCellWithReuseIdentifier: Constants.UI.tvShowCellIdentifier)
         collectionView.register(SectionHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.UI.headerIdentifier)
-        collectionView.dataSource = self
-        collectionView.delegate = self
+                collectionView.dataSource = self
+                collectionView.delegate = self
         collectionView.backgroundColor = .clear
     }
     
@@ -90,103 +86,120 @@ class HomeScreenViewController: UIViewController {
             make.bottom.equalTo(-90)
         }
     }
-
-    //MARK: - Load Media
-
-    private func loadMovies(completion: @escaping(() -> ())) {
-        NetworkManager.shared.requestTrendingMovies(completion: { movies in
-            self.movies = movies
-            self.sections.append(.movies(movie: movies))
-            completion()
-        })
-    }
-
-    private func loadTVShows(completion: @escaping(() -> ())) {
-        NetworkManager.shared.requestTrendingTVShows(completion: { tvShows in
-            self.tvShow = tvShows
-            self.sections.append(.tvShows(tvShow: tvShows))
-            completion()
-        })
-    }
 }
 
 extension HomeScreenViewController: UICollectionViewDataSource, UICollectionViewDelegate {
 
-    //MARK: - DataSource
+//    func createDataSource() {
+//        dataSource = UICollectionViewDiffableDataSource<SectionType, SectionType>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+//
+//            switch itemIdentifier {
+//
+//            case .movies(let movie):
+//                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.movieCellIdentifier, for: indexPath) as? MoviesCollectionViewCell else {
+//                    return UICollectionViewCell()
+//                }
+//                let item = movie[indexPath.row]
+//                cell.configure(with: item)
+//                return cell
+//            case .tvShows(let tvShow):
+//                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.tvShowCellIdentifier, for: indexPath) as? TVShowsCollectionViewCell else {
+//                    return UICollectionViewCell()
+//                }
+//                let item = tvShow[indexPath.row]
+//                cell.configure(with: item)
+//                return cell
+//            }
+//        })
+//    }
+//
+//
+//    func reloadData() {
+//        var snapshot = NSDiffableDataSourceSnapshot<SectionType, SectionType>()
+//        snapshot.appendSections(viewModel.sections)
+//
+//        for sections in viewModel.sections {
+//            snapshot.appendItems(sections.items, toSection: sections)
+//        }
+//
+//        dataSource?.apply(snapshot)
+//    }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let collectionType = sections[section]
-        switch collectionType {
-        case .movies(let movies):
-            return movies.count
-        case .tvShows(let tvShows):
-            return tvShows.count
-        }
-    }
+        //MARK: - DataSource
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return sections.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let collectionType = sections[indexPath.section]
-        switch collectionType {
-        case .movies(let movie):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.movieCellIdentifier, for: indexPath) as? MoviesCollectionViewCell else {
-                return UICollectionViewCell()
+        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            let collectionType = viewModel.sections[section]
+            switch collectionType {
+            case .movies(let movies):
+                return movies.count
+            case .tvShows(let tvShows):
+                return tvShows.count
             }
-            let item = movie[indexPath.row]
-            cell.configure(with: item)
-            return cell
-        case .tvShows(let tvShow):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.tvShowCellIdentifier, for: indexPath) as? TVShowsCollectionViewCell else {
-                return UICollectionViewCell()
-            }
-            let item = tvShow[indexPath.row]
-            cell.configure(with: item)
-            return cell
         }
-    }
 
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
-        let collectionType = sections[indexPath.section]
-        switch collectionType {
-        case .movies(movie: let movie):
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.UI.headerIdentifier, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
-                return UICollectionReusableView()
-            }
-            let item = movie[indexPath.row]
-            header.configure(with: .movie(movie: item))
-            return header
-        case .tvShows(tvShow: let tvShow):
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.UI.headerIdentifier, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
-                return UICollectionReusableView()
-            }
-            let item = tvShow[indexPath.row]
-            header.configure(with: .tvShow(tvShow: item))
-            return header
+        func numberOfSections(in collectionView: UICollectionView) -> Int {
+            return viewModel.sections.count
         }
-    }
 
-    //MARK: - Delegate
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        let section = sections[indexPath.section]
-        switch section {
-        case .movies: // сделать общий массив медиа
-            let movie = self.movies[indexPath.row]
-            let vc = MediaViewController(media: .movie(movie: movie)) // тут мы берем тип из моделей если нужен
-            vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
-            navigationController?.pushViewController(vc, animated: true)
-        case .tvShows:
-            let tvShow = self.tvShow[indexPath.row]
-            let vc = MediaViewController(media: .tvShow(tvShow: tvShow))
-            vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
-            navigationController?.pushViewController(vc, animated: true)
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let collectionType = viewModel.sections[indexPath.section]
+            switch collectionType {
+            case .movies(let movie):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.movieCellIdentifier, for: indexPath) as? MoviesCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                let item = movie[indexPath.row]
+                cell.configure(with: item)
+                return cell
+            case .tvShows(let tvShow):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.tvShowCellIdentifier, for: indexPath) as? TVShowsCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                let item = tvShow[indexPath.row]
+                cell.configure(with: item)
+                return cell
+            }
         }
-    }
+
+        func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+            let collectionType = viewModel.sections[indexPath.section]
+            switch collectionType {
+            case .movies(movie: let movie):
+                guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.UI.headerIdentifier, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
+                    return UICollectionReusableView()
+                }
+                let item = movie[indexPath.row]
+                header.configure(with: .movie(movie: item))
+                return header
+            case .tvShows(tvShow: let tvShow):
+                guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.UI.headerIdentifier, for: indexPath) as? SectionHeaderReusableView, kind == UICollectionView.elementKindSectionHeader else {
+                    return UICollectionReusableView()
+                }
+                let item = tvShow[indexPath.row]
+                header.configure(with: .tvShow(tvShow: item))
+                return header
+            }
+        }
+
+        //MARK: - Delegate
+
+        func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            let section = viewModel.sections[indexPath.section]
+            switch section {
+            case .movies(let movies): // сделать общий массив медиа
+                let movie = movies[indexPath.row]
+                let vc = MediaViewController(media: .movie(movie: movie)) // тут мы берем тип из моделей если нужен
+                vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
+                navigationController?.pushViewController(vc, animated: true)
+            case .tvShows(let TvShows):
+                let tvShow = TvShows[indexPath.row]
+                let vc = MediaViewController(media: .tvShow(tvShow: tvShow))
+                vc.navigationController?.navigationItem.largeTitleDisplayMode = .never
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        }
 
     //MARK: - CollectionLayotSection
 

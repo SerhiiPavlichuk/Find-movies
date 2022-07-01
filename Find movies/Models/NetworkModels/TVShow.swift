@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TvShow : Codable {
+struct TvShow : Codable, Hashable {
     var firstAirDate : String?
     var backdropPath : String?
     var genreIds : [Int]?

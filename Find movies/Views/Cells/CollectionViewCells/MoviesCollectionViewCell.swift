@@ -9,7 +9,7 @@ import UIKit
 import SDWebImage
 
 class MoviesCollectionViewCell: UICollectionViewCell {
-
+    
     private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
         posterImage.contentMode = .scaleAspectFill

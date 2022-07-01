@@ -7,15 +7,22 @@
 
 import Foundation
 
-struct Media {
+//struct Media: Hashable {
+//
+//    let id: Int?
+//    let posterPath: String?
+//    var voteAverage: Double?
+//    let overview: String?
+//    var releaseDate: String?
+//    let title: String?
+//    var ratingString: String {
+//        return String(format: "%.1f", voteAverage!)
+//    }
+//
+//    var type: SectionType
+//}
 
-//    name
-//    image
-
-//    var type: EnumType = .type
-}
-
-struct Movie: Codable {
+struct Movie: Codable, Hashable {
 
     var adult: Bool?
     let id: Int?
@@ -24,12 +31,12 @@ struct Movie: Codable {
     var originalTitle: String?
     let posterPath: String?
     var video: Bool?
-    var voteAverage: Double?
-    let overview: String?
-    var releaseDate: String?
+    let voteAverage: Double?
+    var overview: String?
+    let releaseDate: String?
     var voteCount: Int?
     let title: String?
-    let popularity: Double?
+    var popularity: Double?
     var mediaType: String?
     var ratingString: String {
         return String(format: "%.1f", voteAverage!)
@@ -71,9 +78,10 @@ struct Movie: Codable {
 
     init(from movieRealm: MovieRealm) {
         self.title = movieRealm.title
-        self.popularity = movieRealm.popularity
+        self.voteAverage = movieRealm.voteAverage
         self.overview = movieRealm.overview
         self.id = movieRealm.id
         self.posterPath = movieRealm.posterPath
+        self.releaseDate = movieRealm.releaseDate
     }
 }

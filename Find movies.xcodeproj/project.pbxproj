@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84031922286E065A00603534 /* HomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84031921286E065A00603534 /* HomeScreenViewModel.swift */; };
 		8443B5CB2850C55100A36452 /* CategoriesScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5CA2850C55100A36452 /* CategoriesScreenViewController.swift */; };
 		8443B5CF2850C63A00A36452 /* BookmarkScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5CE2850C63A00A36452 /* BookmarkScreenViewController.swift */; };
 		8443B5D42850C68700A36452 /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8443B5D32850C68700A36452 /* HomeScreenViewController.swift */; };
@@ -46,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		24CE6054797CE3DDEA9AD1BB /* Pods-Find movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find movies.debug.xcconfig"; path = "Target Support Files/Pods-Find movies/Pods-Find movies.debug.xcconfig"; sourceTree = "<group>"; };
+		84031921286E065A00603534 /* HomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewModel.swift; sourceTree = "<group>"; };
 		8443B5CA2850C55100A36452 /* CategoriesScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesScreenViewController.swift; sourceTree = "<group>"; };
 		8443B5CE2850C63A00A36452 /* BookmarkScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkScreenViewController.swift; sourceTree = "<group>"; };
 		8443B5D32850C68700A36452 /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
@@ -98,9 +100,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8412C2132868DB2A0081A58E /* ViewModels */ = {
+		84031920286E064800603534 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				84031921286E065A00603534 /* HomeScreenViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -189,7 +192,7 @@
 		8475653B28507D4B00822E74 /* Find movies */ = {
 			isa = PBXGroup;
 			children = (
-				8412C2132868DB2A0081A58E /* ViewModels */,
+				84031920286E064800603534 /* ViewModels */,
 				8443B5EA2851C90D00A36452 /* Views */,
 				8443B5E92851C90500A36452 /* Controllers */,
 				8443B5E82851C8FD00A36452 /* Models */,
@@ -431,6 +434,7 @@
 				847A66E02860B3EF0046201E /* Roles.swift in Sources */,
 				8475653D28507D4B00822E74 /* AppDelegate.swift in Sources */,
 				8443B5E72851C40000A36452 /* Constants.swift in Sources */,
+				84031922286E065A00603534 /* HomeScreenViewModel.swift in Sources */,
 				849F888028632AA500039779 /* SectionHeaderReusableView.swift in Sources */,
 				84B1947D2852429B004A3992 /* TVShowsCollectionViewCell.swift in Sources */,
 				8475653F28507D4B00822E74 /* SceneDelegate.swift in Sources */,

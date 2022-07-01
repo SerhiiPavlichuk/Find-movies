@@ -10,9 +10,10 @@ import RealmSwift
 
 class MovieRealm: Object {
     @objc dynamic var title = ""
-    @objc dynamic var popularity: Double = 0.0
+    @objc dynamic var voteAverage: Double = 0.0
     @objc dynamic var overview = ""
     @objc dynamic var id: Int = 0
     @objc dynamic var posterPath = ""
+    @objc dynamic var releaseDate = ""
 
 }
