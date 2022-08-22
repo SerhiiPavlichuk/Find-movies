@@ -26,7 +26,6 @@ class MediaViewController: UIViewController {
     private var movieActorsArray: [Cast] = []
     private var tvShowActorsArray: [Cast] = []
 
-
     private lazy var posterImage: UIImageView = {
         let posterImage = UIImageView()
         posterImage.contentMode = .scaleAspectFill
@@ -112,11 +111,14 @@ class MediaViewController: UIViewController {
         case .tvShow(let tvShow):
             self.tvShow = tvShow
         }
+
         super.init(nibName: nil, bundle: nil)
+
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+
     }
 
     //MARK: - Life Cycle
@@ -137,6 +139,7 @@ class MediaViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupConstraints()
+
     }
 
     //MARK: - Create UI
@@ -144,8 +147,8 @@ class MediaViewController: UIViewController {
     private func createNavBarButtons() {
         let leftButton = UIBarButtonItem(image: UIImage.backIcon, style: .plain, target: self, action: #selector(backButtonPressed))
         let rightButton = UIBarButtonItem(image: UIImage.bookmarkIcon, style: .plain, target: self, action: #selector(addToBookmark))
-        self.navigationItem.leftBarButtonItem  = leftButton
-        self.navigationItem.rightBarButtonItem  = rightButton
+        self.navigationItem.leftBarButtonItem = leftButton
+        self.navigationItem.rightBarButtonItem = rightButton
 
     }
 
@@ -186,6 +189,7 @@ class MediaViewController: UIViewController {
             overviewLabel.text = tvShow.overview
             loadTVShowActors {
                 self.actorsCollectionView.reloadData()
+
             }
         }
     }
@@ -221,6 +225,7 @@ class MediaViewController: UIViewController {
 
     @objc func backButtonPressed() {
         self.navigationController?.popToRootViewController(animated: true)
+
     }
 
     //MARK: - Action works but looks like it needs to be fixed!
@@ -245,6 +250,7 @@ class MediaViewController: UIViewController {
                                               style: UIAlertAction.Style.default,
                                               handler: nil))
                 self.present(alert, animated: true, completion: nil)
+
             })
         }
     }
@@ -270,6 +276,7 @@ class MediaViewController: UIViewController {
                     config.entersReaderIfAvailable = true
                     let vc = SFSafariViewController(url: url, configuration: config)
                     self.present(vc, animated: true)
+
                 }
             })
         }
@@ -292,6 +299,7 @@ extension MediaViewController: UICollectionViewDataSource, UICollectionViewDeleg
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.UI.actorsCellIdentifier, for: indexPath) as? ActorsMovieCollectionViewCell else {
             return UICollectionViewCell()
         }
+
         if movieActorsArray.count != 0 {
             let currentActor = movieActorsArray[indexPath.row]
             cell.configure(with: currentActor)
@@ -307,6 +315,7 @@ extension MediaViewController: UICollectionViewDataSource, UICollectionViewDeleg
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 150)
+
     }
 
     //MARK: - Constrains

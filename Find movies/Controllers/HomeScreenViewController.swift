@@ -14,7 +14,7 @@ class HomeScreenViewController: UIViewController {
     //MARK: - Properties
     
     private let viewModel = HomeScreenViewModel()
-    private var dataSource: UICollectionViewDiffableDataSource<SectionType, SectionType>?
+//    private var dataSource: UICollectionViewDiffableDataSource<SectionType, SectionType>?
 
     private lazy var collectionView: UICollectionView = UICollectionView(
         frame: .zero,

@@ -18,7 +18,6 @@ class BookmarkScreenViewController: UIViewController {
     private var tvShows: [TvShowRealm] = []
     private var movies: [MovieRealm] = []
 
-
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
